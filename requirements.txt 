@@ -1,0 +1,16 @@
+torch>=2.0.0
+torchaudio>=2.0.0
+torchvision
+transformers>=4.30.0
+datasets
+huggingface-hub
+accelerate
+librosa>=0.10.0
+soundfile
+scipy
+pandas
+numpy
+scikit-learn
+matplotlib
+seaborn
+jupyterlab
