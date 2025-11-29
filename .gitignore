@@ -1,6 +1,9 @@
 # mp3 files
 *.mp3
 
+#idea
+.idea/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
