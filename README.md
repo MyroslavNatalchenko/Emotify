@@ -23,12 +23,14 @@ To ensure code stability and minimize merge conflicts, we will strictly follow a
 ## Data Strategy & Model Training
 To achieve robust emotional analysis in music, **Emotify** will utilize a two-staged approach regarding data ingestion and feature extraction.
 
-### Baseline Training (DEAM Dataset)
-We will initiate the training of our core model using the **DEAM (Database for Emotional Analysis in Music)** dataset. This provides a standardized benchmark for arousal and valence in music.
-* **Source:** [DEAM MediaEval Dataset on Kaggle](https://www.kaggle.com/datasets/imsparsh/deam-mediaeval-dataset-emotional-analysis-in-music/data)
-* **Goal:** Establish a baseline performance for emotion recognition.
+### Baseline Training (MTG-Jamendo Dataset)
+To ensure robust generalization, we utilize the **MTG-Jamendo Dataset** for baseline training. Unlike smaller datasets limited to the Arousal-Valence plane, MTG-Jamendo provides a massive collection of Creative Commons audio annotated with rich semantic tags.
 
-### Advanced Annotation & Augmentation (MERT)
-To expand our dataset and provide granular, high-quality audio annotations, we will integrate the **MERT-v1-330M** model. MERT (Music Understanding Model with Large-Scale Self-Supervised Training) will allow us to extract deep acoustic features and generate pseudo-labels for unlabelled data.
-* **Model:** [m-a-p/MERT-v1-330M on Hugging Face](https://huggingface.co/m-a-p/MERT-v1-330M)
-* **Goal:** Enhance the model's ability to detect subtle musical nuances and generalize better across different genres.
+**Key Resources:**
+* **Official Repository:** [MTG-Jamendo-Dataset](https://github.com/MTG/mtg-jamendo-dataset/tree/master)
+* **Data Statistics & Balance:**
+  We specifically focus on the `mood/theme` split. To understand the dataset's composition and the number of samples available for specific emotions (e.g., *happy, dark, energetic*), refer to the official statistics:
+  [> Link: Detailed Class Counts & Distribution](https://github.com/MTG/mtg-jamendo-dataset/blob/master/stats/raw_30s_cleantags_50artists/mood_theme.tsv)
+
+**Objective:**
+Leverage this large-scale data to train a model capable of predicting high-level emotional descriptors from raw audio spectrograms.
