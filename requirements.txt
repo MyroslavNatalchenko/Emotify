@@ -4,3 +4,8 @@ pandas
 scikit-learn
 tqdm
 essentia
+
+flask
+python-dotenv
+spotipy
+requests

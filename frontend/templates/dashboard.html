@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Emotify{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="user-info">
+        <h1>Witaj, {{ user['display_name'] }}! 👋</h1>
+    </div>
+    
+    <hr>
+    
+    <h2>Ostatnio słuchane utwory</h2>
+    
+    {% if tracks %}
+    <div class="tracks-list">
+        {% for track in tracks %}
+        <div class="track-card">
+            <img src="{{ track['image'] }}" alt="{{ track['name'] }}" class="track-image">
+            <div class="track-info">
+                <h3>{{ track['name'] }}</h3>
+                <p>{{ track['artist'] }}</p>
+            </div>
+            <a href="/analyze/{{ track['id'] }}" class="btn btn-analyze">Analizuj emocje</a>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>Nie znaleziono ostatnio słuchanych utworów.</p>
+    {% endif %}
+</div>
+{% endblock %}
