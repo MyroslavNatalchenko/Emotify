@@ -31,7 +31,6 @@ def predict_mp3(mp3_path):
         print(f"CSV not found: {CSV_PATH}")
         return
 
-    # Загрузка модели
     model = AudioCNN(num_classes=len(classes)).to(DEVICE)
 
     if not os.path.exists(MODEL_PATH):
@@ -43,22 +42,18 @@ def predict_mp3(mp3_path):
 
     print(f"Analyzing: {mp3_path}")
     try:
-        # Обработка аудио
         audio = load_audio(mp3_path, segment_duration=29.1)
         spec = melspectrogram(audio)
 
-        # Паддинг/Обрезка до 1366 (безопасность)
         if spec.shape[1] > TARGET_FRAMES:
             spec = spec[:, :TARGET_FRAMES]
         elif spec.shape[1] < TARGET_FRAMES:
             pad = TARGET_FRAMES - spec.shape[1]
             spec = np.pad(spec, ((0, 0), (0, pad)), mode='constant')
 
-        # ВАЖНО: Делаем только (Batch, Freq, Time) -> (1, 96, 1366)
         inp = torch.from_numpy(spec).float().unsqueeze(0).to(DEVICE)
 
         with torch.no_grad():
-            # Модель вернет логиты, применяем сигмоиду здесь
             logits = model(inp)
             probs = torch.sigmoid(logits).cpu().numpy()[0]
 
@@ -67,7 +62,7 @@ def predict_mp3(mp3_path):
         print("\n--- Results ---")
         found = False
         for tag, prob in results:
-            if prob > 0.15: # Чуть поднял порог
+            if prob > 0.15:
                 print(f"{tag}: {prob * 100:.1f}%")
                 found = True
             elif found and prob < 0.1:
