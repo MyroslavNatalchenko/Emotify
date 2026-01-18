@@ -1,51 +1,60 @@
 'use client';
 
-import Link from "next/link";
-import { Headphones, Github, Menu } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import Link from 'next/link';
+import { Menu, Heart } from 'lucide-react';
+import { useState } from 'react';
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-black/60 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-md md:max-w-7xl items-center justify-between px-6">
-
-        <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-green-500/20 text-green-500">
-            <Headphones className="h-5 w-5" />
+    <nav className="fixed top-0 right-0 left-0 z-50 border-b border-slate-200 bg-white/80 backdrop-blur-xl">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+        <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
+          <div className="flex h-9 w-9 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-lg shadow-emerald-200">
+            <Heart className="h-5 w-5" fill="currentColor" />
           </div>
-          <span className="text-lg font-bold text-white tracking-tight">Emotify</span>
+          <div className="flex flex-col">
+            <span className="text-lg leading-none font-bold tracking-tight text-slate-800">
+              Emotify
+            </span>
+          </div>
         </Link>
 
+        {/* Mobile Menu Toggle */}
         <button
-            className="md:hidden text-neutral-300 hover:text-white"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="p-2 text-slate-600 transition-colors hover:text-emerald-500 md:hidden"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-            <Menu className="h-7 w-7" />
+          <Menu className="h-7 w-7" />
         </button>
 
-        <div className="hidden md:flex items-center gap-4">
-          <Link href="https://github.com" target="_blank">
-            <Button variant="ghost" size="icon" className="text-neutral-400 hover:text-white hover:bg-white/10 rounded-xl">
-              <Github className="h-5 w-5" />
-            </Button>
+        {/* Desktop Links */}
+        <div className="hidden gap-8 md:flex">
+          <Link href="/" className="text-sm font-semibold text-slate-600 hover:text-emerald-500">
+            Dashboard
+          </Link>
+          <Link
+            href="#"
+            className="cursor-not-allowed text-sm font-semibold text-slate-600 opacity-50 hover:text-emerald-500"
+          >
+            Historia
           </Link>
         </div>
       </div>
 
+      {/* Mobile Dropdown */}
       {isMenuOpen && (
-        <div className="absolute top-16 left-0 w-full bg-neutral-900 border-b border-white/10 p-4 flex flex-col gap-4 md:hidden shadow-2xl animate-in slide-in-from-top-5">
-           <Link href="/" onClick={() => setIsMenuOpen(false)} className="text-sm font-medium text-neutral-300 hover:text-green-500">
-             Strona Główna
-           </Link>
-           <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className="text-sm font-medium text-neutral-300 hover:text-green-500">
-             Dashboard
-           </Link>
-           <div className="h-px bg-white/10 my-1" />
-           <p className="text-xs text-neutral-500 text-center">Emotify v1.0</p>
+        <div className="animate-in slide-in-from-top-2 absolute top-16 left-0 flex w-full flex-col gap-4 border-b border-slate-200 bg-white p-6 shadow-xl md:hidden">
+          <Link
+            href="/"
+            onClick={() => setIsMenuOpen(false)}
+            className="text-base font-bold text-slate-800"
+          >
+            Strona Główna
+          </Link>
+          <div className="h-px bg-slate-100" />
+          <p className="text-center text-[10px] font-medium text-slate-400">Emotify</p>
         </div>
       )}
     </nav>
