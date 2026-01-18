@@ -90,10 +90,8 @@ class MERTDataset(Dataset):
                     self.X_data.append(embedding)
                     found_count += 1
                 except:
-                    self.X_data.append(np.zeros(768))
                     missing_count += 1
             else:
-                self.X_data.append(np.zeros(768))
                 missing_count += 1
 
             self.Y_data.append(labels_matrix[idx])
