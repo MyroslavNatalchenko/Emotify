@@ -2,20 +2,16 @@ import pandas as pd
 import os
 from sklearn.preprocessing import MultiLabelBinarizer
 
+try :
+    from mood_themes import MOOD_THEMES
+except ImportError:
+    import sys
+    sys.path.append(".")
+    from mood_themes import MOOD_THEMES
+
 INPUT_FILE = 'MTG/autotagging_moodtheme.tsv'
 OUTPUT_FILE = 'MTG/moodtheme_low_npy.csv'
 BASE_PATH = '/Volumes/T7 Shield/Emotify/MTG_dataset/melspecs_29_1/'
-
-MOOD_THEMES = sorted([
-    "love", "happy", "energetic", "dark", "relaxing", "melodic", "sad", "dream",
-    "film", "emotional", "epic", "romantic", "melancholic", "space", "meditative",
-    "uplifting", "ballad", "inspiring", "calm", "soft", "slow", "fun", "christmas",
-    "motivational", "positive", "upbeat", "dramatic", "deep", "children", "adventure",
-    "soundscape", "summer", "powerful", "hopeful", "advertising", "party", "background",
-    "action", "movie", "drama", "nature", "cool", "funny", "documentary", "horror",
-    "fast", "ambiental", "groovy", "corporate", "commercial", "travel", "sport",
-    "mellow", "retro", "game", "sexy", "trailer", "heavy", "holiday"
-])
 
 def process_tsv_to_csv():
     data_rows = []
