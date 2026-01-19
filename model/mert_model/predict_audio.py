@@ -6,9 +6,13 @@ import pandas as pd
 import numpy as np
 from transformers import Wav2Vec2FeatureExtractor, AutoModel
 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+CSV_FILE = os.path.join(BASE_DIR, 'datasets', 'MTG', 'moodtheme_mp3.csv')
+MODEL_PATH = os.path.join(BASE_DIR, 'model', 'trained_model', 'mert_model_best.pth')
+
 # --- НАСТРОЙКИ ---
-CSV_FILE = '../../datasets/MTG/moodtheme_mp3.csv'
-MODEL_PATH = "trained_model/mert_model_best.pth"
+#CSV_FILE = '../../datasets/MTG/moodtheme_mp3.csv'
+#MODEL_PATH = "trained_model/mert_model_best.pth"
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 MERT_HF_ID = "m-a-p/MERT-v1-95M"
 
@@ -58,6 +62,9 @@ class AudioPredictor:
         except Exception as e:
             print(f"ОШИБКА весов: {e}")
 
+        # dla testow z mock modelem
+        self.classifier.eval()
+
     def process_audio(self, audio_path):
         """Версия с Librosa"""
         try:
@@ -92,6 +99,34 @@ class AudioPredictor:
     def predict(self, audio_path):
         if not os.path.exists(audio_path):
             print("❌ Файл не найден")
+            return []
+
+        if self.classifier is None:
+            print("Error: Model not loaded")
+            return []
+
+        embedding = self.process_audio(audio_path)
+        if embedding is None:
+            return []
+
+        with torch.no_grad():
+            logits = self.classifier(embedding)
+            probs = torch.sigmoid(logits)[0].cpu().numpy()
+
+        results = []
+        for idx, prob in enumerate(probs):
+            if prob > 0.15:
+                results.append({
+                    "tag": self.labels[idx],
+                    "confidence": float(prob)
+                })
+
+        results.sort(key=lambda x: x["confidence"], reverse=True)
+        return results
+
+    def predict_cli(self, audio_path):
+        if not os.path.exists(audio_path):
+            print("❌ Файл не найден")
             return
 
         print(f"Processing: {os.path.basename(audio_path)} ...")
@@ -120,4 +155,4 @@ if __name__ == "__main__":
     while True:
         path = input("\n>> Путь к mp3/wav (или 'exit'): ").strip().strip('"')
         if path.lower() in ['exit', 'quit']: break
-        predictor.predict(path)
+        predictor.predict_cli(path)

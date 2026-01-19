@@ -4,3 +4,11 @@ pandas
 scikit-learn
 tqdm
 essentia
+
+flask
+flask-cors
+flask-limiter
+werkzeug
+python-dotenv
+spotipy
+requests
