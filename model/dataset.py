@@ -2,18 +2,11 @@ import torch
 from torch.utils.data import Dataset
 import numpy as np
 
-try :
-    from datasets.mood_themes import MOOD_THEMES
-except ImportError:
-    import sys
-    sys.path.append("../")
-    from datasets.mood_themes import MOOD_THEMES
-
 class AudioMoodDataset(Dataset):
     def __init__(self, df, target_length=1366):
         self.df = df
         self.target_length = target_length
-        self.label_cols = MOOD_THEMES
+        self.label_cols = df.columns[3:]
 
     def __len__(self):
         return len(self.df)
