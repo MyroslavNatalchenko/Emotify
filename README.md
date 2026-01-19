@@ -10,7 +10,7 @@
 ## Team Members
 * **Myroslav Natalchenko**
 * **Kiryl Sankouski**
-* Michał Zach
+* **Michał Zach**
 
 ## Development Workflow on GitHub
 

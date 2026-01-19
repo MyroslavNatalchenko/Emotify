@@ -57,6 +57,10 @@ def health_check():
 @app.route('/api/auth/login')
 def api_login():
     auth_url = sp_oauth.get_authorize_url()
+
+    print(f"DEBUG: Generated Auth URL: {auth_url}")
+    print(f"DEBUG: Configured Redirect URI: {sp_oauth.redirect_uri}")
+
     return jsonify({"url": auth_url})
 
 
