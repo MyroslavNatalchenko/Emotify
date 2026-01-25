@@ -81,6 +81,28 @@ def api_exchange_token():
         return jsonify({"error": str(e)}), 400
 
 
+@app.route('/api/me', methods=['GET'])
+def get_current_user():
+    auth_header = request.headers.get('Authorization')
+    token = auth_header.split(" ")[1] if auth_header else None
+
+    if not token:
+        return jsonify({"error": "Missing token"}), 401
+
+    try:
+        sp = spotipy.Spotify(auth=token)
+        user_data = sp.current_user()
+
+        return jsonify({
+            "display_name": user_data.get('display_name'),
+            "email": user_data.get('email'),
+            "images": user_data.get('images', []),
+            "product": user_data.get('product')
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+
 @app.route('/api/analyze/upload', methods=['POST'])
 @limiter.limit("5 per minute")
 def analyze_upload():

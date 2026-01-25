@@ -25,6 +25,18 @@ export const exchangeToken = async (code: string) => {
   return data;
 };
 
+export const getUserProfile = async () => {
+  const token = localStorage.getItem('spotify_token');
+  if (!token) throw new Error('No token found');
+
+  const { data } = await api.get('/me', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return data;
+};
+
 export const analyzeFile = async (file: File) => {
   const formData = new FormData();
   formData.append('file', file);
