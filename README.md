@@ -1,11 +1,12 @@
 # Project Emotify
 
-## Table of Contents:
+## Table of Contents
 - [Team Members](#team-members)
 - [Development Workflow](#development-workflow-on-github)
 - [Data Strategy & Model Training](#data-strategy--model-training)
-  - [Baseline Training](#baseline-training-deam-dataset)
-  - [Advanced Annotation](#advanced-annotation--augmentation-mert)
+  - [Baseline Feature Extraction (MTG-Jamendo + MERT)](#baseline-feature-extraction-mtg-jamendo--mert)
+  - [Key Resources & Technologies](#key-resources--technologies)
+- [Frontend Application](#frontend-application)
 
 ## Team Members
 * **Myroslav Natalchenko**
@@ -21,16 +22,41 @@ To ensure code stability and minimize merge conflicts, we will strictly follow a
 3.  Once task is complete, open a Pull Request (PR) from your fork's branch to the upstream repository's `main` branch
 
 ## Data Strategy & Model Training
-To achieve robust emotional analysis in music, **Emotify** will utilize a two-staged approach regarding data ingestion and feature extraction.
 
-### Baseline Training (MTG-Jamendo Dataset)
-To ensure robust generalization, we utilize the **MTG-Jamendo Dataset** for baseline training. Unlike smaller datasets limited to the Arousal-Valence plane, MTG-Jamendo provides a massive collection of Creative Commons audio annotated with rich semantic tags.
+To achieve accurate and scalable emotion recognition in music, **Emotify** adopts a feature-based, two-step pipeline:
 
-**Key Resources:**
-* **Official Repository:** [MTG-Jamendo-Dataset](https://github.com/MTG/mtg-jamendo-dataset/tree/master)
-* **Data Statistics & Balance:**
-  We specifically focus on the `mood/theme` split. To understand the dataset's composition and the number of samples available for specific emotions (e.g., *happy, dark, energetic*), refer to the official statistics:
-  [> Link: Detailed Class Counts & Distribution](https://github.com/MTG/mtg-jamendo-dataset/blob/master/stats/raw_30s_cleantags_50artists/mood_theme.tsv)
+1. **High-level audio representation extraction** using a large pretrained music model  
+2. **Supervised training** of a lightweight emotion classifier on extracted embeddings  
 
-**Objective:**
-Leverage this large-scale data to train a model capable of predicting high-level emotional descriptors from raw audio spectrograms.
+This approach allows us to decouple heavy audio processing from model training, significantly reducing training cost and improving experimentation speed.
+
+### Baseline Feature Extraction (MTG-Jamendo + MERT)
+
+As a foundation for emotion modeling, we use the **MTG-Jamendo Dataset**, specifically the subset annotated with **`mood/theme`** tags.
+
+To transform raw audio into meaningful numerical representations, we employ the pretrained **MERT (Music Embedding Representation from Transformers)** `m-a-p/MERT-v1-95M` from HuggingFace model.
+Each track is converted into a fixed-size **embedding tensor**, which is stored as a `.npy` file. 
+
+#### Model Training
+Our emotion prediction model is trained **directly on the extracted MERT embeddings**, rather than raw audio or spectrograms.
+
+This design provides:
+- Faster training cycles
+- Lower hardware requirements
+- Strong generalization thanks to MERT pretraining
+
+### Key Resources & Technologies
+
+**Datasets**
+- [MTG-Jamendo Dataset](https://github.com/MTG/mtg-jamendo-dataset/tree/master) (mood/theme subset)
+
+**Pretrained Models**
+- MERT: https://huggingface.co/m-a-p/MERT-v1-95M
+
+**Core Stack**
+- Python
+- NumPy, PyTorch 
+- Hugging Face Transformers
+
+## Frontend Application
+The **Emotify frontend** is implemented as a modern web application using **Next.js**.
